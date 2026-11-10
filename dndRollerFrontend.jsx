@@ -304,6 +304,15 @@ function App() {
   ).values()].sort((first, second) => first.localeCompare(second, undefined, { sensitivity: 'base' }));
 
   return (
+    <ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-5892740761307224"
+     data-ad-slot="6608911347"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#" aria-label="The Dice Vault home">
