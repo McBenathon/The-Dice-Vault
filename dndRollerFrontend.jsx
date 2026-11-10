@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 const STORAGE_KEY = 'dnd-roller-attacks';
 const HIT_MODIFIER_STORAGE_KEY = 'dnd-roller-hit-modifier';
@@ -40,6 +41,29 @@ function normalizeAction(rawAction, fallbackId = Date.now()) {
     owner_type: ownerType || null,
     owner_name: ownerName,
   };
+}
+
+
+
+function AdUnit() {
+  useEffect(() => {
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (error) {
+      console.error('Could not initialize the AdSense ad:', error);
+    }
+  }, []);
+
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: 'block' }}
+      data-ad-client="ca-pub-5892740761307224"
+      data-ad-slot="6608911347"
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    />
+  );
 }
 
 function App() {
@@ -304,13 +328,10 @@ function App() {
   ).values()].sort((first, second) => first.localeCompare(second, undefined, { sensitivity: 'base' }));
 
   return (
-    <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-5892740761307224"
-     data-ad-slot="6608911347"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
-
+    <div className="page-layout">
+      <aside className="ad-rail" aria-label="Advertisement">
+        <AdUnit />
+    </aside>
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#" aria-label="The Dice Vault home">
@@ -643,6 +664,7 @@ function App() {
         </section>
         </main>
     </div>
+  </div>
   );
 }
 
