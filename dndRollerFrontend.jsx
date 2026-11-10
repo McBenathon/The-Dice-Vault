@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useEffect } from 'react';
+
 
 const STORAGE_KEY = 'dnd-roller-attacks';
 const HIT_MODIFIER_STORAGE_KEY = 'dnd-roller-hit-modifier';
