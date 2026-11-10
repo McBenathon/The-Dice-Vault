@@ -649,17 +649,41 @@ function App() {
             </a>.
           </p>
 
-          <h3>Cookies, analytics, and advertising</h3>
+         <h3>Advertising and cookies</h3>
           <p>
-            The app itself does not currently use analytics or advertising services and does not set cookies.
-            Hosting or font providers may process information as described in their own privacy policies.
-            This statement will be updated if analytics, advertising, or other data-collection features are added.
+            This site uses Google AdSense to display ads. Google and its advertising partners may use cookies
+            or similar technologies to serve and measure ads, including personalized ads based on your visits
+            to this site or other sites. These technologies may collect or receive information such as your
+            IP address, browser or device information, and interactions with ads. Google's advertising cookies
+            may be used by Google and its partners for these purposes.
+          </p>
+          <p>
+            You can manage personalized advertising through{' '}
+            <a href="https://www.google.com/settings/ads" target="_blank" rel="noreferrer">
+              Google Ads Settings
+            </a>
+            . You can also visit{' '}
+            <a href="https://www.aboutads.info/choices/" target="_blank" rel="noreferrer">
+              YourAdChoices
+            </a>{' '}
+            to learn about opting out of some participating companies' interest-based advertising.
+            Opting out does not necessarily stop ads from appearing; ads may be less relevant.
+          </p>
+          <p>
+            Depending on the ad settings for this site, other third-party ad providers may also use cookies
+            or similar technologies. For visitors in the European Economic Area, the United Kingdom, and
+            Switzerland, Google requires publishers to obtain consent for certain cookies and personalized
+            advertising uses where applicable. Your choices may be presented through the site's consent
+            message, if shown.
+          </p>
+          <p>
+            The app does not currently use a separate analytics service. Hosting and font providers may
+            process technical information as described above and in their own privacy policies.
           </p>
 
           <h3>Contact</h3>
           <p>
             For privacy questions, contact the site owner at <a href="mailto:McBenathon1@gmail.com">McBenathon1@gmail.com</a>.
-      
           </p>
         </section>
         </main>
