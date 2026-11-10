@@ -1260,3 +1260,52 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Desktop: app with an ad rail to its left */
+.page-layout {
+  width: min(1440px, calc(100% - 48px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1120px);
+  align-items: start;
+  gap: 24px;
+  margin: 0 auto;
+}
+
+.page-layout > .app-shell {
+  grid-column: 2;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0;
+}
+
+.ad-rail {
+  grid-column: 1;
+  grid-row: 1;
+  width: 160px;
+  min-height: 600px;
+  justify-self: end;
+  margin-top: 120px;
+}
+
+.ad-rail .adsbygoogle {
+  display: block;
+  width: 160px;
+  min-height: 600px;
+}
+
+/* On narrower screens, hide the side ad to keep the app usable */
+@media (max-width: 1350px) {
+  .page-layout {
+    display: block;
+    width: 100%;
+  }
+
+  .ad-rail {
+    display: none;
+  }
+
+  .page-layout > .app-shell {
+    width: min(1120px, calc(100% - 48px));
+    margin: 0 auto;
+  }
+}
