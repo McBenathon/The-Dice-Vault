@@ -582,8 +582,58 @@ function App() {
 
         <footer className="footer">
           <span>ROLL WITH COURAGE <span aria-hidden="true">✦</span></span>
+          <a className="text-button footer-reset" href="#privacy">Privacy</a>
           <button className="text-button footer-reset" type="button" onClick={resetActions}>Reset actions</button>
         </footer>
+
+        <section className="panel forge-panel privacy-panel" id="privacy" aria-labelledby="privacy-title">
+          <p className="eyebrow">YOUR DATA, YOUR ADVENTURE</p>
+          <h2 id="privacy-title">Privacy statement</h2>
+          <p><strong>Last updated: November 10, 2026</strong></p>
+
+          <h3>Information stored by this app</h3>
+          <p>
+            The Dice Vault does not require an account and does not send your saved actions or roll-to-hit
+            modifier to an app server. These items are stored in local storage in the browser you are using.
+            They stay on that browser and device unless you clear its site data. They are not synced between
+            browsers or devices. Anyone with access to the same browser profile may also be able to access them.
+          </p>
+          <p>
+            When you import an actions file, the file is read in your browser and its contents replace your
+            saved list after you confirm. When you export, the browser downloads a JSON file to your device.
+            The app does not upload either file.
+          </p>
+
+          <h3>Service providers</h3>
+          <p>
+            This website is hosted by Cloudflare. When your browser requests the site, Cloudflare may process
+            technical request information such as your IP address, browser details, and requested pages to
+            deliver and protect the service. See the{' '}
+            <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer">
+              Cloudflare Privacy Policy
+            </a>.
+          </p>
+          <p>
+            The site loads fonts from Google Fonts. Your browser connects to Google to retrieve those font
+            files, which may provide Google with technical information such as your IP address. See{' '}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">
+              Google’s Privacy Policy
+            </a>.
+          </p>
+
+          <h3>Cookies, analytics, and advertising</h3>
+          <p>
+            The app itself does not currently use analytics or advertising services and does not set cookies.
+            Hosting or font providers may process information as described in their own privacy policies.
+            This statement will be updated if analytics, advertising, or other data-collection features are added.
+          </p>
+
+          <h3>Contact</h3>
+          <p>
+            For privacy questions, contact the site owner at <a href="mailto:McBenathon1@gmail.com">McBenathon1@gmail.com</a>.
+            Replace this placeholder with a monitored contact email before publishing this statement.
+          </p>
+        </section>
         </main>
     </div>
   );
