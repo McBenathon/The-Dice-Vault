@@ -631,7 +631,7 @@ function App() {
           <h3>Contact</h3>
           <p>
             For privacy questions, contact the site owner at <a href="mailto:McBenathon1@gmail.com">McBenathon1@gmail.com</a>.
-            Replace this placeholder with a monitored contact email before publishing this statement.
+      
           </p>
         </section>
         </main>
