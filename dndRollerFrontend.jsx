@@ -310,9 +310,7 @@ function App() {
      data-ad-slot="6608911347"
      data-ad-format="auto"
      data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
+
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#" aria-label="The Dice Vault home">
