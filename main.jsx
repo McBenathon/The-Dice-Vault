@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from '../dndRollerFrontend.jsx';
+import App from './dndRollerFrontend.jsx';
 import './styles.css';
 
 createRoot(document.getElementById('root')).render(
