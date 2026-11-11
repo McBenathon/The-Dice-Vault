@@ -617,7 +617,7 @@ function App() {
 
         <footer className="footer">
           <span>ROLL WITH COURAGE <span aria-hidden="true">✦</span></span>
-          <a className="text-button footer-reset" href="#privacy">Privacy</a>
+          <a className="text-button footer-reset" href="/privacy.html">Privacy</a>
           <button className="text-button footer-reset" type="button" onClick={resetActions}>Reset actions</button>
         </footer>
 
