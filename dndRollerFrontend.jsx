@@ -683,7 +683,7 @@ function App() {
 
           <h3>Contact</h3>
           <p>
-            For privacy questions, contact the site owner at <a href="mailto:McBenathon1@gmail.com">McBenathon1@gmail.com</a>.
+            For privacy questions, contact the site owner at <a href="mailto:Thedicevaultemail@gmail.com">Thedicevaultemail@gmail.com</a>.
           </p>
         </section>
         </main>
