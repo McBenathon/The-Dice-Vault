@@ -105,6 +105,13 @@ function App() {
   const [isCriticalHit, setIsCriticalHit] = useState(false);
   const [error, setError] = useState('');
 
+  
+  useEffect(() => {
+    if (window.location.hash === '#privacy') {
+      document.getElementById('privacy-title')?.scrollIntoView({ block: 'start' });
+    }
+  }, []);
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(actions));
