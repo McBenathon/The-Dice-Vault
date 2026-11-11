@@ -2,6 +2,8 @@
 
 A browser-based D&D dice roller for attacks, healing, and any other dice-based actions. Link each action to one named character or enemy and filter/group the list by entity. Actions are saved in the current browser's local storage; there is no server-side database or account sync. Export a JSON backup to move your collection to another browser or device.
 
+[thedicevault.app](https://thedicevault.app/)
+
 ## Run locally
 
 Install Node.js, then run:
