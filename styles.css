@@ -147,6 +147,37 @@ input:focus-visible {
   padding: 0 0 46px;
 }
 
+/* Desktop: app with an ad rail to its left */
+..page-layout {
+  position: relative;
+  width: 100%;
+}
+
+
+.app-shell {
+  width: min(1120px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.ad-rail {
+  position: absolute;
+  top: 120px;
+  left: max(0px, calc(50% - 744px));
+  width: 160px;
+  min-height: 600px;
+}
+
+.ad-rail .adsbygoogle {
+  display: block;
+  width: 160px;
+  min-height: 600px;
+}
+
+@media (max-width: 1487px) {
+  .ad-rail {
+    display: none;
+  }
+
 .hero {
   min-height: 300px;
   position: relative;
@@ -1261,29 +1292,5 @@ p {
   }
 }
 
-/* Desktop: app with an ad rail to its left */
-..page-layout {
-  position: relative;
-  width: 100%;
-}
 
-.ad-rail {
-  position: absolute;
-  top: 120px;
-  left: max(0px, calc(50% - 744px));
-  width: 160px;
-  min-height: 600px;
-}
 
-.ad-rail .adsbygoogle {
-  display: block;
-  width: 160px;
-  min-height: 600px;
-}
-
-@media (max-width: 1487px) {
-  .ad-rail {
-    display: none;
-  }
-
-}
