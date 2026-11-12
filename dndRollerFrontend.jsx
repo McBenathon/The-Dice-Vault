@@ -28,6 +28,8 @@ function createActionId() {
 
 function App() {
   const fileInputRef = useRef(null);
+  const forgePanelRef = useRef(null);
+  const rollResultRef = useRef(null);
   const [exportFilename, setExportFilename] = useState('my-dnd-actions');
   const [hitModifier, setHitModifier] = useState(() => {
     try {
@@ -57,6 +59,7 @@ function App() {
   const [actionLevels, setActionLevels] = useState({});
   const [actionFilter, setActionFilter] = useState('all');
   const [rollResult, setRollResult] = useState('');
+  const [rollScrollVersion, setRollScrollVersion] = useState(0);
   const [isCriticalHit, setIsCriticalHit] = useState(false);
   const [error, setError] = useState('');
 
@@ -66,6 +69,14 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (rollScrollVersion === 0) return;
+
+    rollResultRef.current?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'center',
+    });
+  }, [rollScrollVersion]);
 
   useEffect(() => {
     try {
@@ -173,6 +184,10 @@ function App() {
       scalingDiceSides: action.level_scaling ? String(action.level_scaling.dice_sides) : '',
     });
     setError('');
+    forgePanelRef.current?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
   }
 
   function cancelEdit() {
@@ -211,6 +226,7 @@ function App() {
     setIsCriticalHit(false);
     setError('');
     setRollResult(`${action.name}${level === null ? '' : ` (Level ${level})`}: ${notation}\nTotal: ${total}`);
+    setRollScrollVersion((version) => version + 1);
   }
 
   function rollToHit() {
@@ -227,6 +243,7 @@ function App() {
     setIsCriticalHit(critical);
     setRollResult(`${critical ? 'NATURAL 20 — CRITICAL HIT!\n' : ''}To hit: d20 (${roll})${modifierText} = ${total}`);
     setError('');
+    setRollScrollVersion((version) => version + 1);
   }
 
   function exportActions() {
@@ -416,7 +433,7 @@ function App() {
         </section>
 
         <div className="workspace">
-          <section className="panel forge-panel">
+          <section className="panel forge-panel" ref={forgePanelRef}>
             <div className="panel-heading">
               <div>
                 <p className="eyebrow">YOUR ADVENTURER'S KIT</p>
@@ -605,6 +622,7 @@ function App() {
 
             {rollResult && (
               <div
+                ref={rollResultRef}
                 className={`roll-result${isCriticalHit ? ' critical-hit' : ''}`}
                 role="status"
                 aria-live="polite"
