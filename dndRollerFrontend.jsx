@@ -368,7 +368,7 @@ function App() {
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow"><span /> YOUR ADVENTURE, AT A ROLL</p>
-            <h1>Make every move<br /><em>legendary.</em></h1>
+            <h1>D&amp;D Dice &amp; Action<br /><em>Roller</em></h1>
             <p className="hero-description">
                 Keep your abilities close. Roll for damage, healing, and every daring thing in between.
             </p>
