@@ -41,9 +41,34 @@ button {
   color: inherit;
 }
 
+.page-layout {
+  position: relative;
+  width: 100%;
+}
+
 .app-shell {
   width: min(1120px, calc(100% - 48px));
   margin: 0 auto;
+}
+
+.ad-rail {
+  width: 160px;
+  min-height: 600px;
+  position: absolute;
+  top: 120px;
+  left: max(0px, calc(50% - 744px));
+}
+
+.ad-rail .adsbygoogle {
+  display: block;
+  width: 160px;
+  min-height: 600px;
+}
+
+@media (max-width: 1487px) {
+  .ad-rail {
+    display: none;
+  }
 }
 
 .topbar {
@@ -145,37 +170,6 @@ input:focus-visible {
 
 .main-content {
   padding: 0 0 46px;
-}
-
-/* Desktop: app with an ad rail to its left */
-.page-layout {
-  position: relative;
-  width: 100%;
-}
-
-.app-shell {
-  width: min(1120px, calc(100% - 48px));
-  margin: 0 auto;
-}
-
-.ad-rail {
-  position: absolute;
-  top: 120px;
-  left: max(0px, calc(50% - 744px));
-  width: 160px;
-  min-height: 600px;
-}
-
-.ad-rail .adsbygoogle {
-  display: block;
-  width: 160px;
-  min-height: 600px;
-}
-
-@media (max-width: 1487px) {
-  .ad-rail {
-    display: none;
-  }
 }
 
 .hero {
@@ -487,6 +481,39 @@ p {
   font-size: 14px;
 }
 
+.level-scaling-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #c6c6bb;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.level-scaling-toggle input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--gold);
+}
+
+.level-scaling-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(211, 174, 105, 0.2);
+  border-radius: 4px;
+  background: rgba(15, 17, 16, 0.35);
+}
+
+.level-scaling-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #83867b;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
 .import-note {
   display: flex;
   align-items: flex-start;
@@ -750,6 +777,7 @@ p {
 .attack-card {
   min-height: 67px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   padding: 10px 11px;
@@ -778,7 +806,7 @@ p {
 
 .attack-details {
   min-width: 0;
-  flex: 1;
+  flex: 1 1 130px;
 }
 
 .attack-details h3 {
@@ -829,6 +857,38 @@ p {
 
 .button-roll span {
   font-size: 12px;
+}
+
+.action-level-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #92948a;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.action-level-control input {
+  width: 48px;
+  min-height: 31px;
+  padding: 0 4px;
+  border: 1px solid #383d37;
+  border-radius: 4px;
+  outline: none;
+  background: #151817;
+  color: var(--cream);
+  font-size: 11px;
+  text-align: center;
+}
+
+.action-level-control input:focus {
+  border-color: rgba(211, 174, 105, 0.72);
+  box-shadow: 0 0 0 3px rgba(211, 174, 105, 0.08);
+}
+
+.edit-button:hover {
+  color: var(--gold-bright);
 }
 
 .icon-button {
@@ -1152,6 +1212,10 @@ p {
     font-size: 16px;
   }
 
+  .level-scaling-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .field select {
     min-height: 38px;
     padding-left: 9px;
@@ -1291,6 +1355,3 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
-
-
-
