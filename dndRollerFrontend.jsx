@@ -1,69 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { getActionDiceGroups, MAX_ACTION_LEVEL, normalizeAction } from './actionUtils.js';
 
-//main
 const STORAGE_KEY = 'dnd-roller-attacks';
 const HIT_MODIFIER_STORAGE_KEY = 'dnd-roller-hit-modifier';
 const EXPORT_FORMAT = 'dnd-roller-actions';
 const LEGACY_EXPORT_FORMAT = 'dnd-roller-attacks';
-const EXPORT_VERSION = 3;
+const EXPORT_VERSION = 4;
 
-function createActionId() {
-  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
-
-function normalizeAction(rawAction, fallbackId = Date.now()) {
-  const name = String(rawAction?.name ?? '').trim();
-  const numDice = Number(rawAction?.num_dice ?? rawAction?.numDice ?? 0);
-  const diceSides = Number(rawAction?.dice_sides ?? rawAction?.diceSides ?? 0);
-  const modifier = Number(rawAction?.modifier ?? 0);
-  const ownerName = String(rawAction?.owner_name ?? rawAction?.ownerName ?? '').trim();
-  const rawOwnerType = rawAction?.owner_type ?? rawAction?.ownerType ?? '';
-  const ownerType = ownerName ? rawOwnerType : '';
-
-  if (
-    !name ||
-    !Number.isInteger(numDice) ||
-    !Number.isInteger(diceSides) ||
-    !Number.isInteger(modifier) ||
-    numDice <= 0 ||
-    diceSides <= 0 ||
-    (ownerName && !['character', 'enemy'].includes(ownerType))
-  ) {
-    throw new Error('Invalid action data.');
-  }
-
+function createEmptyActionForm() {
   return {
-    id: String(rawAction?.id ?? fallbackId),
-    name,
-    num_dice: numDice,
-    dice_sides: diceSides,
-    modifier,
-    owner_type: ownerType || null,
-    owner_name: ownerName,
+    name: '',
+    numDice: '',
+    diceSides: '',
+    modifier: '',
+    ownerType: '',
+    ownerName: '',
+    levelScaling: false,
+    baseLevel: '1',
+    scalingNumDice: '',
+    scalingDiceSides: '',
   };
 }
 
-
-
-function AdUnit() {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (error) {
-      console.error('Could not initialize the AdSense ad:', error);
-    }
-  }, []);
-
-  return (
-    <ins
-      className="adsbygoogle"
-      style={{ display: 'block' }}
-      data-ad-client="ca-pub-5892740761307224"
-      data-ad-slot="6608911347"
-      data-ad-format="auto"
-      data-full-width-responsive="true"
-    />
-  );
+function createActionId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
 function App() {
@@ -92,25 +52,20 @@ function App() {
       return [];
     }
   });
-  const [newAction, setNewAction] = useState({
-    name: '',
-    numDice: '',
-    diceSides: '',
-    modifier: '',
-    ownerType: '',
-    ownerName: '',
-  });
+  const [newAction, setNewAction] = useState(createEmptyActionForm);
+  const [editingActionId, setEditingActionId] = useState(null);
+  const [actionLevels, setActionLevels] = useState({});
   const [actionFilter, setActionFilter] = useState('all');
   const [rollResult, setRollResult] = useState('');
   const [isCriticalHit, setIsCriticalHit] = useState(false);
   const [error, setError] = useState('');
 
-  
   useEffect(() => {
     if (window.location.hash === '#privacy') {
       document.getElementById('privacy-title')?.scrollIntoView({ block: 'start' });
     }
   }, []);
+
 
   useEffect(() => {
     try {
@@ -130,7 +85,7 @@ function App() {
     }
   }, [hitModifier]);
 
-  function addAction(event) {
+  function saveAction(event) {
     event.preventDefault();
     setError('');
 
@@ -139,6 +94,9 @@ function App() {
     const diceSides = Number(newAction.diceSides);
     const modifier = Number(newAction.modifier || 0);
     const ownerName = newAction.ownerName.trim();
+    const baseLevel = Number(newAction.baseLevel);
+    const scalingNumDice = Number(newAction.scalingNumDice);
+    const scalingDiceSides = Number(newAction.scalingDiceSides);
 
     if (
       !name ||
@@ -147,37 +105,112 @@ function App() {
       !Number.isInteger(modifier) ||
       numDice <= 0 ||
       diceSides <= 0 ||
-      (newAction.ownerType && !ownerName)
+      (newAction.ownerType && !ownerName) ||
+      (newAction.levelScaling && (
+        !Number.isInteger(baseLevel) ||
+        baseLevel < 1 ||
+        baseLevel > MAX_ACTION_LEVEL ||
+        !Number.isInteger(scalingNumDice) ||
+        scalingNumDice <= 0 ||
+        !Number.isInteger(scalingDiceSides) ||
+        scalingDiceSides <= 0
+      ))
     ) {
-      setError('Enter an action name, valid dice values, and a name for the selected character or enemy.');
+      setError('Enter a name, valid dice values, and complete level-scaling values when enabled.');
       return;
     }
 
     const action = {
-      id: createActionId(),
+      id: editingActionId || createActionId(),
       name,
       num_dice: numDice,
       dice_sides: diceSides,
       modifier,
       owner_type: newAction.ownerType || null,
       owner_name: ownerName,
+      level_scaling: newAction.levelScaling
+        ? {
+          base_level: baseLevel,
+          num_dice: scalingNumDice,
+          dice_sides: scalingDiceSides,
+        }
+        : null,
     };
 
-    setActions((currentActions) => [...currentActions, action]);
-    setNewAction({ name: '', numDice: '', diceSides: '', modifier: '', ownerType: '', ownerName: '' });
+    if (editingActionId) {
+      setActions((currentActions) => currentActions.map((currentAction) =>
+        currentAction.id === editingActionId ? action : currentAction
+      ));
+      setActionLevels((currentLevels) => {
+        const nextLevels = { ...currentLevels };
+        if (action.level_scaling) {
+          nextLevels[action.id] = String(action.level_scaling.base_level);
+        } else {
+          delete nextLevels[action.id];
+        }
+        return nextLevels;
+      });
+    } else {
+      setActions((currentActions) => [...currentActions, action]);
+    }
+    setEditingActionId(null);
+    setNewAction(createEmptyActionForm());
+    setError('');
+  }
+
+  function editAction(action) {
+    setEditingActionId(action.id);
+    setNewAction({
+      name: action.name,
+      numDice: String(action.num_dice),
+      diceSides: String(action.dice_sides),
+      modifier: String(action.modifier),
+      ownerType: action.owner_type || '',
+      ownerName: action.owner_name,
+      levelScaling: Boolean(action.level_scaling),
+      baseLevel: String(action.level_scaling?.base_level ?? 1),
+      scalingNumDice: action.level_scaling ? String(action.level_scaling.num_dice) : '',
+      scalingDiceSides: action.level_scaling ? String(action.level_scaling.dice_sides) : '',
+    });
+    setError('');
+  }
+
+  function cancelEdit() {
+    setEditingActionId(null);
+    setNewAction(createEmptyActionForm());
     setError('');
   }
 
   function deleteAction(id) {
     setActions((currentActions) => currentActions.filter((action) => action.id !== id));
+    if (editingActionId === id) cancelEdit();
   }
 
   function rollAction(action) {
-    const rolls = Array.from({ length: action.num_dice }, () => Math.floor(Math.random() * action.dice_sides) + 1);
-    const total = rolls.reduce((sum, value) => sum + value, 0) + action.modifier;
+    const level = action.level_scaling
+      ? Number(actionLevels[action.id] ?? action.level_scaling.base_level)
+      : null;
+    let diceGroups;
+    try {
+      diceGroups = getActionDiceGroups(action, level);
+    } catch (rollError) {
+      setError(rollError.message);
+      return;
+    }
+
+    const rollDetails = diceGroups.map(({ num_dice, dice_sides }) => {
+      const rolls = Array.from({ length: num_dice }, () => Math.floor(Math.random() * dice_sides) + 1);
+      return {
+        description: `${num_dice}d${dice_sides} (${rolls.join(', ')})`,
+        total: rolls.reduce((sum, value) => sum + value, 0),
+      };
+    });
+    const notation = rollDetails.map((group) => group.description).join(' + ');
+    const total = rollDetails.reduce((sum, group) => sum + group.total, 0) + action.modifier;
 
     setIsCriticalHit(false);
-    setRollResult(`${action.name}: ${action.num_dice}d${action.dice_sides} (${rolls.join(', ')})\nTotal: ${total}`);
+    setError('');
+    setRollResult(`${action.name}${level === null ? '' : ` (Level ${level})`}: ${notation}\nTotal: ${total}`);
   }
 
   function rollToHit() {
@@ -236,7 +269,7 @@ function App() {
           importedActions = parsed;
         } else if (
           parsed?.format === EXPORT_FORMAT &&
-          [1, 2, EXPORT_VERSION].includes(parsed?.version) &&
+          [1, 2, 3, EXPORT_VERSION].includes(parsed?.version) &&
           Array.isArray(parsed?.actions)
         ) {
           importedActions = parsed.actions;
@@ -263,6 +296,8 @@ function App() {
           return;
         }
         setActions(normalized);
+        setActionLevels({});
+        cancelEdit();
         setHitModifier(String(importedHitModifier));
         setRollResult('');
         setIsCriticalHit(false);
@@ -284,6 +319,8 @@ function App() {
     }
 
     setActions([]);
+    setActionLevels({});
+    cancelEdit();
     setRollResult('');
     setIsCriticalHit(false);
     setError('');
@@ -335,10 +372,6 @@ function App() {
   ).values()].sort((first, second) => first.localeCompare(second, undefined, { sensitivity: 'base' }));
 
   return (
-    <div className="page-layout">
-      <aside className="ad-rail" aria-label="Advertisement">
-        <AdUnit />
-    </aside>
     <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#" aria-label="The Dice Vault home">
@@ -387,11 +420,11 @@ function App() {
             <div className="panel-heading">
               <div>
                 <p className="eyebrow">YOUR ADVENTURER'S KIT</p>
-                <h2>Create an action</h2>
+                <h2>{editingActionId ? 'Edit action' : 'Create an action'}</h2>
               </div>
               <span className="heading-icon" aria-hidden="true">⚒</span>
             </div>
-            <form className="attack-form" onSubmit={addAction}>
+            <form className="attack-form" onSubmit={saveAction}>
               <label className="field field-wide">
                 <span>Action name</span>
                 <input
@@ -465,8 +498,74 @@ function App() {
                   step="1"
                 />
               </label>
+              <label className="level-scaling-toggle field-wide">
+                <input
+                  type="checkbox"
+                  checked={newAction.levelScaling}
+                  onChange={(event) => {
+                    const checked = event.target.checked;
+                    setNewAction((currentAction) => ({
+                      ...currentAction,
+                      levelScaling: checked,
+                      scalingNumDice: checked
+                        ? currentAction.scalingNumDice || currentAction.numDice
+                        : currentAction.scalingNumDice,
+                      scalingDiceSides: checked
+                        ? currentAction.scalingDiceSides || currentAction.diceSides
+                        : currentAction.scalingDiceSides,
+                    }));
+                  }}
+                />
+                <span>Scales when used at a higher level</span>
+              </label>
+              {newAction.levelScaling && (
+                <div className="level-scaling-options field-wide">
+                  <label className="field">
+                    <span>Base level</span>
+                    <input
+                      type="number"
+                      value={newAction.baseLevel}
+                      onChange={(event) => setNewAction({ ...newAction, baseLevel: event.target.value })}
+                      min="1"
+                      max={MAX_ACTION_LEVEL}
+                      step="1"
+                      required
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Extra dice per level</span>
+                    <input
+                      type="number"
+                      value={newAction.scalingNumDice}
+                      onChange={(event) => setNewAction({ ...newAction, scalingNumDice: event.target.value })}
+                      min="1"
+                      step="1"
+                      required
+                    />
+                  </label>
+                  <label className="field">
+                    <span>Extra die sides</span>
+                    <input
+                      type="number"
+                      value={newAction.scalingDiceSides}
+                      onChange={(event) => setNewAction({ ...newAction, scalingDiceSides: event.target.value })}
+                      min="1"
+                      step="1"
+                      required
+                    />
+                  </label>
+                  <p className="level-scaling-note">
+                    Each level above the base adds the extra dice shown.
+                  </p>
+                </div>
+              )}
+              {editingActionId && (
+                <button className="button button-quiet field-wide" type="button" onClick={cancelEdit}>
+                  Cancel editing
+                </button>
+              )}
               <button className="button button-primary field-wide" type="submit">
-                <span aria-hidden="true">✦</span> Save action
+                <span aria-hidden="true">✦</span> {editingActionId ? 'Save changes' : 'Save action'}
               </button>
             </form>
 
@@ -546,7 +645,7 @@ function App() {
                 <p>
                   {actions.length === 0
                     ? 'Add an attack, a healing spell, or any action you want to roll.'
-                    : 'Link an action to this group when you create it.'}
+                    : 'Link an action to this group when you create or edit it.'}
                 </p>
               </div>
             ) : (
@@ -569,11 +668,41 @@ function App() {
                             <p>
                               {action.num_dice}<span className="notation-d">d</span>{action.dice_sides}
                               {action.modifier > 0 ? ` + ${action.modifier}` : action.modifier < 0 ? ` − ${Math.abs(action.modifier)}` : ''}
-                              <span className="damage-label"> PER USE</span>
+                              <span className="damage-label">
+                                {action.level_scaling
+                                  ? ` + ${action.level_scaling.num_dice}d${action.level_scaling.dice_sides} / LEVEL`
+                                  : ' PER USE'}
+                              </span>
                             </p>
                           </div>
+                          {action.level_scaling && (
+                            <label className="action-level-control">
+                              <span>LEVEL</span>
+                              <input
+                                type="number"
+                                value={actionLevels[action.id] ?? action.level_scaling.base_level}
+                                onChange={(event) => setActionLevels((currentLevels) => ({
+                                  ...currentLevels,
+                                  [action.id]: event.target.value,
+                                }))}
+                                min={action.level_scaling.base_level}
+                                max={MAX_ACTION_LEVEL}
+                                step="1"
+                                aria-label={`${action.name} use level`}
+                              />
+                            </label>
+                          )}
                           <button className="button button-roll" type="button" onClick={() => rollAction(action)}>
                             Roll <span aria-hidden="true">↗</span>
+                          </button>
+                          <button
+                            className="icon-button edit-button"
+                            type="button"
+                            onClick={() => editAction(action)}
+                            aria-label={`Edit ${action.name}`}
+                            title="Edit action"
+                          >
+                            ✎
                           </button>
                           <button
                             className="icon-button delete-button"
@@ -621,9 +750,8 @@ function App() {
           <button className="text-button footer-reset" type="button" onClick={resetActions}>Reset actions</button>
         </footer>
 
-        </main>
+      </main>
     </div>
-  </div>
   );
 }
 
