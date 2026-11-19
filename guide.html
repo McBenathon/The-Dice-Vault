@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111313" />
+    <meta
+      name="description"
+      content="Learn how to build, organize, scale, roll, and back up custom dice actions with The Dice Vault."
+    />
+    <link rel="canonical" href="https://thedicevault.app/guide" />
+    <title>Dice Roller Guide: Actions, Modifiers, and Backups | The Dice Vault</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5892740761307224"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Arial, sans-serif;
+        color: #ece9df;
+        background: #111313;
+        line-height: 1.7;
+      }
+
+      body {
+        box-sizing: border-box;
+        width: min(820px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+
+      a {
+        color: #f0cd88;
+      }
+
+      header,
+      footer {
+        padding: 16px 0;
+        border-bottom: 1px solid #333731;
+      }
+
+      footer {
+        margin-top: 40px;
+        border-top: 1px solid #333731;
+        border-bottom: 0;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #f0cd88;
+        line-height: 1.25;
+      }
+
+      h1 {
+        margin: 36px 0 12px;
+        font-family: Georgia, serif;
+        font-size: clamp(32px, 7vw, 48px);
+      }
+
+      h2 {
+        margin-top: 36px;
+        font-family: Georgia, serif;
+        font-size: 25px;
+      }
+
+      h3 {
+        margin-top: 24px;
+        font-size: 18px;
+      }
+
+      p,
+      li {
+        color: #d3d1c7;
+      }
+
+      .lede {
+        color: #b6b5aa;
+        font-size: 18px;
+      }
+
+      .example {
+        padding: 16px 20px;
+        border-left: 3px solid #d3ae69;
+        background: #191c1b;
+      }
+
+      .formula {
+        color: #f0cd88;
+        font-family: Consolas, monospace;
+        white-space: nowrap;
+      }
+
+      .callout {
+        padding: 14px 18px;
+        border: 1px solid #333731;
+        border-radius: 5px;
+        background: #191c1b;
+      }
+
+      @media (max-width: 520px) {
+        body {
+          padding-top: 16px;
+        }
+
+        .lede {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/">The Dice Vault</a>
+    </header>
+    <main>
+      <h1>How to Use The Dice Vault Action Roller</h1>
+      <p class="lede">
+        Build a reusable list of dice-based actions, keep actions grouped by character or enemy,
+        and roll them when you need them. This guide explains the roller's inputs, level scaling,
+        results, and how to keep a backup of your collection.
+      </p>
+
+      <h2>1. Create an action from its dice formula</h2>
+      <p>
+        Give the action a name, then enter the number of dice and the number of sides on each die.
+        For example, an action written as <span class="formula">2d8 + 3</span> uses two eight-sided
+        dice and a flat modifier of 3. Enter 2 for the number of dice, 8 for die sides, and 3 for
+        Modifier. The modifier is optional; use a negative whole number for a penalty.
+      </p>
+      <p>
+        The roller accepts any positive whole-number dice count and side count. It does not decide
+        whether a formula is allowed by a particular game, character feature, or table ruling. Check
+        the values against the rules your group is using before saving an action.
+      </p>
+      <div class="example">
+        <strong>Example:</strong> for <span class="formula">2d8 + 3</span>, the roller displays both
+        die results and adds them together with 3. If the dice show 4 and 7, the total is 14.
+      </div>
+
+      <h2>2. Organize actions by character or enemy</h2>
+      <p>
+        In the “Link to” menu, choose Character or Enemy and enter a name. The action list groups
+        saved entries by that name, so similarly named actions remain easy to find during a session.
+        Choose “No character or enemy” when an action should stay unassigned. Use the All,
+        Characters, Enemies, and Unassigned filters to narrow the list; each filter shows how many
+        saved actions match it.
+      </p>
+      <p>
+        Use the edit control on an action card to change its formula or assignment. Delete removes
+        just that action. “Clear all” removes the full collection after confirmation.
+      </p>
+
+      <h2>3. Set up an action that scales by level</h2>
+      <p>
+        Turn on “Scales when used at a higher level” to set a base level and an amount of extra dice
+        added for each level above it. When you roll, choose the action's use level; it can be any
+        whole-number level from the base level through 20. The roller adds the extra dice once for
+        each level above the base.
+      </p>
+      <div class="example">
+        <strong>Example:</strong> a base of <span class="formula">1d8</span> at level 1 with
+        <span class="formula">1d6</span> added per level rolls <span class="formula">1d8</span> at
+        level 1, <span class="formula">1d8 + 1d6</span> at level 2, and
+        <span class="formula">1d8 + 2d6</span> at level 3. Set the base and scaling dice to match
+        the progression your group wants to track.
+      </div>
+
+      <h2>4. Roll an action or a d20 check</h2>
+      <p>
+        Select Roll on an action card to see each dice group, the individual die results, and the
+        final total with its modifier. The separate “Roll to hit” control rolls one d20 and adds the
+        whole-number Hit Mod value. A natural 20 is labeled as a critical hit, but the roller does
+        not apply extra critical damage, determine whether an attack hits, or handle advantage,
+        disadvantage, or other game rules. Apply those rules at your table.
+      </p>
+
+      <h2>5. Save and move your collection</h2>
+      <p>
+        Actions and the hit modifier are saved in local storage in the current browser. There is no
+        account sync, so data in one browser or device does not automatically appear on another.
+        Clearing browser site data can remove the collection.
+      </p>
+      <p>
+        Choose Export to download a JSON backup; the filename field lets you name it. Keep the file
+        somewhere you control. To restore it, choose Import and select a compatible Dice Vault export.
+        Import replaces the current action list after a confirmation prompt, so export the current
+        list first if you want to keep both versions.
+      </p>
+      <p class="callout">
+        This tool calculates dice totals; it is not a rules reference or character sheet. The
+        collection is stored only in your browser, so exported files are the way to move or back up
+        your actions.
+      </p>
+
+      <h2>Frequently asked questions</h2>
+      <h3>Does The Dice Vault upload my saved actions?</h3>
+      <p>
+        No. The app stores the action list and hit modifier in browser local storage. Importing and
+        exporting read or write a file in your browser; the app does not upload those files to an
+        account.
+      </p>
+      <h3>Does a natural 20 automatically double the damage?</h3>
+      <p>
+        No. The d20 control identifies a natural 20 in its result, but it does not change action
+        damage. Follow the critical-hit rules used by your group.
+      </p>
+      <h3>Can I use a different dice progression?</h3>
+      <p>
+        Yes. Enter the base dice and the extra dice per level that fit the progression you need.
+        The roller applies that same extra-dice amount at each level above the base.
+      </p>
+    </main>
+    <footer>
+      <a href="/">Open the dice roller</a>
+      <span aria-hidden="true"> · </span>
+      <a href="/privacy.html">Privacy</a>
+    </footer>
+  </body>
+</html>
